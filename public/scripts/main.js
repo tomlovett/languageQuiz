@@ -27,7 +27,10 @@ function quizMode($scope, $http) {
 
 	$scope.submitAnswer = function() {
 		// check answer: $scope.answer
-			// check database
+		// question, answer, 'en'
+		// word, from, to
+		// check database
+
 			// get answer from $http post
 		// set true/false response
 
@@ -36,14 +39,30 @@ function quizMode($scope, $http) {
 	var getCorrect = function() {
 		// check database first
 			// return
+
+		$http.post('/api/translate', {
+			word : $scope.question,
+			from : $scope.lang,
+			to   : 'en'
+		}).then(function(returnData) {
+			$scope.correctAnswer = returnData.data
+		})
+		$http.post('/api/store', {
+			word : $scope.question,
+			db : $scope.lang,
+			to   : ''
+			is  : $scope.correctAnswer
+
+		})
 		// call to server,
 			// question, from, to
 		// store to database
 	}
 
 	$scope.nextQuestion = function() {
-		$scope.correct = false
-		$scope.incorrect = false
+		$scope.isCorrect     = false
+		$scope.isIncorrect   = false
+		$scope.correctAnswer = null
 		// call next
 		$liveQuestion = "set me"
 	}

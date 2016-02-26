@@ -13,11 +13,12 @@
 	<button ng-click="setLanguage()" ng-hide="liveQuestion">Submit</button>
 
 	<div ng-show="liveQuestion">
-		<p>{{livequestion.wuestion}}</p>
-		<input type="text" ng-model="answer" placeholder="Answer">
-		<button ng-click="submitAnswer()">Submit</button>
-		<p style="color: red" ng-show="incorrect">{{correctAnswer}}</p>
-		<p style="color: green" ng-show="correct">That's correct!</p>
+		<p>{{livequestion.question}}</p>
+		<input type="text" ng-model="answer" placeholder="Answer" ng-hide="correctAnswer">
+		<p ng-show="correctAnswer">{{correctAnswer}}</p>
+		<button ng-click="submitAnswer()" ng-show="correctAnswer">Submit</button>
+		<p style="color: red" ng-show="isIncorrect">{{correctAnswer}}</p>
+		<p style="color: green" ng-show="isCorrect">That's correct!</p>
 	</div>
 
 </body>
