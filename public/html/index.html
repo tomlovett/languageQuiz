@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html ng-app="translator">
+<head>
+	<title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
+    <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.js"></script>
+    <script src="/scripts/main.js"></script>
+</head>
+<body ng-controller="simpleTrans">
+
+	<input type="text" ng-model="text.word" placeholder="Word">
+	<input type="text" ng-model="text.from" placeholder="Language From">
+	<input type="text" ng-model="text.to" placeholder="Language To">
+	<button ng-click="translate()">Submit!</button>
+	<p ng-model="translatedText"></p>
+
+</body>
+</html>
