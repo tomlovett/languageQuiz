@@ -23,6 +23,7 @@ app.get('/', function(req, res) {
 
 // API \\
 app.post('/api/translate', controller.simpleTranslate)
+app.post('/api/loadNext', controller.loadNextQuestion)
 
 
 // Creating Server and Listening for Connections \\

@@ -9,13 +9,12 @@
 </head>
 <body ng-controller="quizMode">
 
-	<input ng-hide="liveQuestion" ng-model="lang" type="text" placeholder="Language to Quiz">
-	<button ng-click="setLanguage()" ng-hide="liveQuestion">Submit</button>
+	<input ng-hide="pairObj" ng-model="langA" type="text" placeholder="Language to Quiz">
+	<button ng-click="setLanguage()" ng-hide="pairObj">Submit</button>
 
-	<div ng-show="liveQuestion">
+	<div ng-show="pairObj">
 		<p>{{livequestion.question}}</p>
 		<input type="text" ng-model="answer" placeholder="Answer" ng-hide="correctAnswer">
-		<p ng-show="correctAnswer">{{correctAnswer}}</p>
 		<button ng-click="submitAnswer()" ng-show="correctAnswer">Submit</button>
 		<p style="color: red" ng-show="isIncorrect">{{correctAnswer}}</p>
 		<p style="color: green" ng-show="isCorrect">That's correct!</p>

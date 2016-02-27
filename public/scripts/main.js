@@ -26,45 +26,31 @@ function quizMode($scope, $http) {
 	}
 
 	$scope.submitAnswer = function() {
+		if ($scope.answer )
 		// check answer: $scope.answer
 		// question, answer, 'en'
-		// word, from, to
+		// wordA, langA, landB
 		// check database
 
 			// get answer from $http post
 		// set true/false response
-
-	}
-
-	var getCorrect = function() {
-		// check database first
-			// return
-
-		$http.post('/api/translate', {
-			word : $scope.question,
-			from : $scope.lang,
-			to   : 'en'
-		}).then(function(returnData) {
-			$scope.correctAnswer = returnData.data
-		})
-		$http.post('/api/store', {
-			word : $scope.question,
-			db : $scope.lang,
-			to   : ''
-			is  : $scope.correctAnswer
-
-		})
-		// call to server,
-			// question, from, to
-		// store to database
 	}
 
 	$scope.nextQuestion = function() {
 		$scope.isCorrect     = false
 		$scope.isIncorrect   = false
-		$scope.correctAnswer = null
-		// call next
-		$liveQuestion = "set me"
+		$scope.pairObj = loadNextQuestion()
+	}
+
+	var loadNextQuestion = function() {
+		// posts { langA : '', langB: ''}
+		var langObj = {
+			langA : $scope.pairObj.langA,
+			langB : $scope.pairObj.langB
+		}
+		$http.post('/loadNext', langObj).then(function(err, returnData) {
+			$scope.pairObj = returnData.data  // Pair model
+		}
 	}
 
 }
