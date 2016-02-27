@@ -45,7 +45,6 @@ angular.module('translator').controller('quizMode', ['$scope', '$http', function
 				failQuiz()
 			}
 		}
-		// $scope.answer = ''
 		if ($scope.questionNum == 10) {
 			completeQuiz()
 		}
@@ -59,11 +58,14 @@ angular.module('translator').controller('quizMode', ['$scope', '$http', function
 	}
 
 	var loadNextQuestion = function() {
+		$scope.answer = ''
 		$http.post('/api/loadNext', $scope.pair)
 			.then(function(returnData) {
 				console.log('returnData: ', returnData)
 				$scope.pair = returnData.data  // returns Pair model
 			})
+		console.log('isCorrect, isIncorrect: ', $scope.isCorrect, $scope.isIncorrect)
+		console.log('winner, failed: ', $scope.winner, $scope.failed)
 	}
 
 	var completeQuiz = function() {

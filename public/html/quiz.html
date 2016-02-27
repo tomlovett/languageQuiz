@@ -33,8 +33,10 @@
 		Your answer:    "{{answer.toLowerCase()}}"<br>
 		Correct answer: "{{pair.wordB}}"</p>
 
-		<button ng-show="isCorrect" ng-click="nextQuestion()">Next Question</button>
-		<button ng-show="isIncorrect" ng-click="nextQuestion()">Next Question</button>
+		<div ng-hide="winner || failed">
+			<button ng-show="isCorrect" ng-click="nextQuestion()">Next Question</button>
+			<button ng-show="isIncorrect" ng-click="nextQuestion()">Next Question</button>
+		</div>
 
 		<div ng-show="failed">
 			<p>You have failed me for the last time.</p>
