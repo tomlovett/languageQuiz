@@ -9,11 +9,11 @@
 </head>
 <body ng-controller="simpleTrans">
 
-	<input type="text" ng-model="text.word" placeholder="Word">
-	<input type="text" ng-model="text.from" placeholder="Language From">
-	<input type="text" ng-model="text.to" placeholder="Language To">
+	<input type="text" ng-model="text.wordA" placeholder="Word">
+	<input type="text" ng-model="text.langA" placeholder="Language From">
+	<input type="text" ng-model="text.langB" placeholder="Language To">
 	<button ng-click="translate()">Submit!</button>
-	<p ng-model="translatedText"></p>
+	<p ng-model="text.wordB"></p>
 
 </body>
 </html>

@@ -19,11 +19,15 @@ mongoose.connect('mongodb://localhost/quizzes')
 // Routes \\
 app.get('/', function(req, res) {
   res.sendFile('index.html', {root: './public/html'})
-});
+})
+
+app.get('/quiz', function(req, res) {
+	res.sendFile('quiz.html', {root: './public/html'})
+})
 
 // API \\
-app.post('/api/translate', controller.simpleTranslate)
-app.post('/api/loadNext', controller.loadNextQuestion)
+app.post('/api/translate', controller.apiTranslate)
+app.post('/api/loadNext',  controller.nextQuestion)
 
 
 // Creating Server and Listening for Connections \\

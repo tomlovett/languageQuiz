@@ -9,15 +9,22 @@
 </head>
 <body ng-controller="quizMode">
 
-	<input ng-hide="pairObj" ng-model="langA" type="text" placeholder="Language to Quiz">
-	<button ng-click="setLanguage()" ng-hide="pairObj">Submit</button>
+	<div>
+		<input ng-model="inputLangA" type="text" placeholder="From">
+		<input ng-model="inputLangB" type="text" placeholder="To">
+		<button ng-click="setLanguages()">Update Languages</button>
+	</div>
 
-	<div ng-show="pairObj">
-		<p>{{livequestion.question}}</p>
+	<div ng-show="pair">
+		<p>{{pair.wordA}}</p>
 		<input type="text" ng-model="answer" placeholder="Answer" ng-hide="correctAnswer">
-		<button ng-click="submitAnswer()" ng-show="correctAnswer">Submit</button>
-		<p style="color: red" ng-show="isIncorrect">{{correctAnswer}}</p>
+		<button ng-click="submitAnswer()">Submit</button>
+
 		<p style="color: green" ng-show="isCorrect">That's correct!</p>
+
+		<p ng-show="isIncorrect"><span style="color: red">Incorrect.</span><br>
+		Your answer: {{answer.toLowerCase()}}<br>
+		Correct answer: {{pair.wordB}}</p>
 	</div>
 
 </body>

@@ -1,55 +1,54 @@
 var Pair = require('../models/models.js')
 var googleTranslate = require('google-translate')('AIzaSyCXxjsWkyGpQxo4WZjWVxi-734NYycQB4M')
 
-var loadNextQuestion = function(req, res) {
-	var req.body.word = callRandomWord()
-	var pairObj = pullFromDatabase(req.body)
-	if (pairObj) {
-		res.send(pairObj)
-	} else {
-		pairObj = new Pair({
-			wordA : req.body.word,
-			langA : req.body.langA,
-			langB : req.body.langB
-		pair.wordB = apiTranslate(pairObj)
-	}
-	if (pair.wordB) { 		
-		pair.save(function(err, storedPair) {
-			res.send(storedPair)
-		}
-	} else { // restarts search on API failure
-		loadNextQuestion(req, res) 
+// operates under the assumption that calls to the database are more efficient/desirable than calls to the API
+// data format doubles the potential size of the database but simplifies code
+	// stores A-B and B-A Pairs in database
+
+var nextQuestion = function(req, res) {
+	req.body.wordA = callRandomWord()
+	Pair.findOne(req.body, function(err, doc) {
+		if (doc) { res.send(doc) }
+	})
+	var newPair = new Pair(req.body)
+	newPair.wordB = apiTranslate(newPair)
+	if (!newPair.wordB) {
+		nextQuestion(req, res) // restarts search on API failure
+	} else { 		
+		newPair.save(function(err, storedPair) {
+			invertPair(newPair).save(function(err, doc) {
+				console.log('inverted pair saved')
+			})
+			res.send(storedPair) // no error catching
+		})
 	}
 }
 
 var callRandomWord = function() {
-	return 'randomWordAPI'
-
+	return 'random'.toLowerCase()
+	// connect random word generator API
 }
 
-var pullFromDatabase = function(bodyObj) {
-	// bodyObj = {question: '', from: '', to: ''}
-	// wordPairObj = {wordA, langA, wordB, langB}
-	// a = look (wordA : bodyObj., langA, langB)
-	// b = look (wordB, langB, langA)
-	// if (a = {Pair}.findOne(a)) return a
-	// else return {Pair}.findOne(b)
-	return
-	// the biggest pain point, contemplating using another data structure, or simply accepting that this function will be ugly
-	// doubling up the database? space on the database VS. concise code
+var apiTranslate = function(pair) {  // ugly formatting but functional
+	// googleTranslate.translate(pair.wordA, pair.langA, pair.langB, function(err, translation) {
+	// 	if (err) { return } 
+	// 	else     { return translation}
+	// }) 
+		// code fails; daily calls exceeded
+		// is known error at school
+	return 'translated'
 }
 
-var apiTranslate = function(pair) {  // not pretty, but good to go
-	googleTranslate.translate(pair.wordA, pair.langA, pair.langB, function(err, translation) {
-		console.log('err: ', err)
-		console.log('translation: ', translation)
-		if (err) { return } 
-		else     { return translation}
-	}) 
+var invertPair = function(pair) {
+	return new Pair({
+		wordA : pair.wordB,
+		wordB : pair.wordA,
+		langA : pair.langB,
+		langB : pair.langA
+	})
 }
-
 
 module.exports = {
-	simpleTranslate : simpleTranslate,
-
+	nextQuestion : nextQuestion,
+	apiTranslate : apiTranslate
 }

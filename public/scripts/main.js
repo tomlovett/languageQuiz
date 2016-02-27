@@ -1,56 +1,69 @@
 angular.module('translator', [])
 
-angular.module('translator').controller('simpleTrans', ['$scope', '$http', simpleTrans])
-
-function simpleTrans($scope, $http) {
+angular.module('translator').controller('simpleTrans', ['$scope', '$http', function($scope, $http) {
 
 	$scope.translate = function() {
 		console.log('posting: ', $scope.text)
 		$http.post('/api/translate', $scope.text)
 			.then(function(returnData) {
 				console.log('returned: ', returnData.data)
-				$scope.translatedText = returnData.data
+				$scope.text = returnData.data
 			})
 	}
 
-}
+}])
 
-angular.module('translator').controller('quizMode', ['$scope', '$https', quizMode])
+angular.module('translator').controller('quizMode', ['$scope', '$http', function($scope, $http) {
 
-// operates under the assumption that calls to the database are more efficient/more desirable than calls to the API
+	var questionNum = 1
+	var incorrectAnswers = 0
 
-function quizMode($scope, $http) {
-
-	$scope.setLanguage = function() {
-		$scope.langSet = true
+	$scope.setLanguages = function() {
+		$scope.pair = {}
+		$scope.pair.langA = $scope.inputLangA
+		$scope.pair.langB = $scope.inputLangB
+		$scope.nextQuestion()
+		// no language validation
+			// if not valid: set to empty, show error message
 	}
 
 	$scope.submitAnswer = function() {
-		if ($scope.answer )
-		// check answer: $scope.answer
-		// question, answer, 'en'
-		// wordA, langA, landB
-		// check database
-
-			// get answer from $http post
-		// set true/false response
+		if ($scope.answer.toLowerCase() == $scope.pair.wordB) {
+			$scope.isCorrect   = true
+		} else {
+			$scope.isIncorrect = true
+			incorrectAnswers += 1
+			if (incorrectAnswers == 3) {
+				failQuiz()
+			}
+		}
+		if ($scope.questionNum == 10) {
+			completeQuiz()
+		}
 	}
 
 	$scope.nextQuestion = function() {
-		$scope.isCorrect     = false
-		$scope.isIncorrect   = false
-		$scope.pairObj = loadNextQuestion()
+		questionNum += 1
+		$scope.isCorrect   = false
+		$scope.isIncorrect = false
+		$scope.pair = loadNextQuestion()
 	}
 
 	var loadNextQuestion = function() {
-		// posts { langA : '', langB: ''}
-		var langObj = {
-			langA : $scope.pairObj.langA,
-			langB : $scope.pairObj.langB
-		}
-		$http.post('/loadNext', langObj).then(function(err, returnData) {
-			$scope.pairObj = returnData.data  // Pair model
-		}
+		$http.post('/api/loadNext', $scope.pair)
+			.then(function(returnData) {
+				console.log('returnData: ', returnData)
+				$scope.pair = returnData.data  // returns Pair model
+			})
 	}
 
-}
+	var completeQuiz = function() {
+		'hooray!'
+		var numCorrect = 10 - incorrectAnswers
+	}
+
+	var failQuiz = function() {
+		'oh no! you\'re a bad person.'
+	}
+
+}])
