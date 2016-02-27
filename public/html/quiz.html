@@ -3,28 +3,48 @@
 <head>
 	<title></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
-    <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.js"></script>
     <script src="/scripts/main.js"></script>
 </head>
 <body ng-controller="quizMode">
 
-	<div>
+	<h3>Language Quiz!</h3>
+
+	<div ng-hide="questionNum">
 		<input ng-model="inputLangA" type="text" placeholder="From">
 		<input ng-model="inputLangB" type="text" placeholder="To">
-		<button ng-click="setLanguages()">Update Languages</button>
+		<button ng-click="newRound()" ng-hide="questionNum" >Update Languages</button>
+	</div>
+	<div ng-show="pair.langA">
+		<h4>{{pair.langA}} -> {{pair.langB}}</h4>
 	</div>
 
+
+
 	<div ng-show="pair">
-		<p>{{pair.wordA}}</p>
+		<p>Question {{questionNum}}:    "{{pair.wordA}}"</p>
 		<input type="text" ng-model="answer" placeholder="Answer" ng-hide="correctAnswer">
 		<button ng-click="submitAnswer()">Submit</button>
 
 		<p style="color: green" ng-show="isCorrect">That's correct!</p>
 
 		<p ng-show="isIncorrect"><span style="color: red">Incorrect.</span><br>
-		Your answer: {{answer.toLowerCase()}}<br>
-		Correct answer: {{pair.wordB}}</p>
+		Your answer:    "{{answer.toLowerCase()}}"<br>
+		Correct answer: "{{pair.wordB}}"</p>
+
+		<button ng-show="isCorrect" ng-click="nextQuestion()">Next Question</button>
+		<button ng-show="isIncorrect" ng-click="nextQuestion()">Next Question</button>
+
+		<div ng-show="failed">
+			<p>You have failed me for the last time.</p>
+			<button ng-click="newRound()">Try again.</button>
+		</div>
+
+		<div ng-show="winner">
+			<p>You won! You are simply fantastic.</p>
+			<button ng-click="newRound()">Kick more ass.</button>
+		</div>
 	</div>
 
 </body>

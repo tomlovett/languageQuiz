@@ -15,19 +15,27 @@ angular.module('translator').controller('simpleTrans', ['$scope', '$http', funct
 
 angular.module('translator').controller('quizMode', ['$scope', '$http', function($scope, $http) {
 
-	var questionNum = 1
 	var incorrectAnswers = 0
 
-	$scope.setLanguages = function() {
+	$scope.newRound = function() {
+		$scope.questionNum = 0
+		incorrectAnswers   = 0
+
+		$scope.failed = false
+		$scope.winner = false
+
 		$scope.pair = {}
 		$scope.pair.langA = $scope.inputLangA
 		$scope.pair.langB = $scope.inputLangB
+
 		$scope.nextQuestion()
 		// no language validation
 			// if not valid: set to empty, show error message
 	}
 
 	$scope.submitAnswer = function() {
+		if ($scope.isIncorrect || $scope.isCorrect) { return}
+		if ($scope.failed || $scope.winner) { return }
 		if ($scope.answer.toLowerCase() == $scope.pair.wordB) {
 			$scope.isCorrect   = true
 		} else {
@@ -37,13 +45,14 @@ angular.module('translator').controller('quizMode', ['$scope', '$http', function
 				failQuiz()
 			}
 		}
+		// $scope.answer = ''
 		if ($scope.questionNum == 10) {
 			completeQuiz()
 		}
 	}
 
 	$scope.nextQuestion = function() {
-		questionNum += 1
+		$scope.questionNum += 1
 		$scope.isCorrect   = false
 		$scope.isIncorrect = false
 		$scope.pair = loadNextQuestion()
@@ -58,12 +67,14 @@ angular.module('translator').controller('quizMode', ['$scope', '$http', function
 	}
 
 	var completeQuiz = function() {
-		'hooray!'
 		var numCorrect = 10 - incorrectAnswers
+		$scope.questionNum = 0
 	}
 
 	var failQuiz = function() {
-		'oh no! you\'re a bad person.'
+		$scope.failed = true
+		// $scope.questionNum = 0
+		$scope.pair = {}
 	}
 
 }])

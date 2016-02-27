@@ -8,21 +8,29 @@ var googleTranslate = require('google-translate')('AIzaSyCXxjsWkyGpQxo4WZjWVxi-7
 var nextQuestion = function(req, res) {
 	req.body.wordA = callRandomWord()
 	Pair.findOne(req.body, function(err, doc) {
-		if (doc) { res.send(doc) }
+		console.log('## err: ', err)
+		console.log('## doc: ', doc)
+		if (doc) {
+			res.send(doc)
+		} else {
+			console.log('###### making a new Pair')
+			var newPair = new Pair(req.body)
+			newPair.wordB = apiTranslate(newPair)
+			if (!newPair.wordB) {
+				nextQuestion(req, res) // restarts search on API failure
+			} else { 		
+				newPair.save(function(err, storedPair) {
+					invertPair(newPair).save(function(err, doc) {
+						console.log('inverted pair saved')
+					})
+					res.send(storedPair) // no error catching
+				})
+			}
+		}
 	})
-	var newPair = new Pair(req.body)
-	newPair.wordB = apiTranslate(newPair)
-	if (!newPair.wordB) {
-		nextQuestion(req, res) // restarts search on API failure
-	} else { 		
-		newPair.save(function(err, storedPair) {
-			invertPair(newPair).save(function(err, doc) {
-				console.log('inverted pair saved')
-			})
-			res.send(storedPair) // no error catching
-		})
-	}
 }
+
+var storeToDatabase = function(pairObj) {}
 
 var callRandomWord = function() {
 	return 'random'.toLowerCase()
@@ -34,7 +42,7 @@ var apiTranslate = function(pair) {  // ugly formatting but functional
 	// 	if (err) { return } 
 	// 	else     { return translation}
 	// }) 
-		// code fails; daily calls exceeded
+		// code fails regardless; daily calls exceeded
 		// is known error at school
 	return 'translated'
 }
